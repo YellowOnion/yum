@@ -51,18 +51,20 @@ common warnings
     ghc-options: -threaded -rtsopts -O2 -Wall
 
 common libs
-       build-depends: base ^>= 4.17.2.0
+       build-depends: base >= 4.9 && <5
                     , bytestring
                     , text
                     , filepath
                     , async
                     , haskell-gi-base
-                    , gi-gdk
-                    , gi-gtk
-                    , gi-gtk-layer-shell
+                    , gi-gdk == 4.0.*
+                    , gi-gtk == 4.0.*
+                    , gi-gtk4-layer-shell
+                    , gi-glib
                     , aeson
                     , pipes
-                    , pipes-aeson
+                    , formatting
+                    , time
 
 
 executable yum
@@ -73,7 +75,10 @@ executable yum
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
-    -- other-modules:
+    other-modules:
+        Yummy
+        Clock
+        Cpu
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
