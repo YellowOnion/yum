@@ -9,7 +9,11 @@ import Control.Concurrent.MVar qualified as MVar
 
 class Yummy a where
   type Widget a
-  view :: (IsWidget (Widget a)) => a -> Widget a
+
+  view :: (IsWidget (Widget a))
+       => a
+       -> Widget a
+
   init    :: MVar.MVar () -> IO a
   updateView  :: a -> IO ()
 
