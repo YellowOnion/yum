@@ -26,7 +26,7 @@ data Clock where
 instance Yummy Clock where
   type Widget Clock = Gtk.Label
 
-  view :: Gtk.IsWidget (Widget Clock) => Clock -> Widget Clock
+  view :: Clock -> Gtk.Label
   view (Clock lbl _) = lbl
 
   init :: MVar () -> IO Clock
