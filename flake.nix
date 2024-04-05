@@ -47,10 +47,11 @@
 
       devShells = eachSystem ({ pkgs, haskellPkgs, system }: {
         default = haskellPkgs.shellFor {
+          withHoogle = true;
           packages = p: [ self.packages.${system}.default ];
           buildInputs = builtins.attrValues {
             inherit (pkgs) cabal-install cabal2nix;
-            inherit (haskellPkgs) hoogle ghc fourmolu ormolu haskell-language-server;
+            inherit (haskellPkgs) ghc haskell-language-server hlint;
           };
         };});
 
