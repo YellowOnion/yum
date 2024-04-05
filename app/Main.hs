@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedLabels  #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE ImplicitParams #-}
 
 import Control.Monad
 
@@ -16,14 +17,13 @@ import GI.Gtk4LayerShell  qualified as GLS
 
 import Data.Text qualified as T
 
-import Yummy qualified as Yummy
+import Yummy qualified
 
 import Clock
 import Cpu
 
-main :: IO ()
-main = do
-  Gtk.init
+gtkMain  :: Gtk.Application -> IO ()
+gtkMain app = do
   css <- new Gtk.CssProvider []
 
   let cssText = T.unlines [ "* { color: pink; background-color: black; } "
@@ -39,7 +39,8 @@ main = do
   Gtk.styleContextAddProviderForDisplay display css (fromIntegral Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
-  win   <- new Gtk.Window   [ #title        := "Test"                    ]
+  win   <- new Gtk.ApplicationWindow   [ #application := app
+                                       , #title := "Yummy" ]
   box   <- new Gtk.Box      [ #orientation  := Gtk.OrientationHorizontal ]
   img   <- Gtk.imageNewFromFile "./static/mem.svg"
 
@@ -63,14 +64,14 @@ main = do
 
   #append box (Yummy.view cpu)
   #append box (Yummy.view clock)
-  #present win
 
   _ <- forkOS $ forever $ Yummy.updateView cpu
   _ <- forkOS $ forever $ Yummy.updateView clock
 
   putStrLn $ "Hello World"
-  mainCtx <- GLib.mainContextDefault
-  let loop = do
-        _ <- GLib.mainContextIteration mainCtx True
-        when True loop
-  loop
+
+  #show win
+
+main = do
+  app <- new Gtk.Application [ #applicationId := "org.yummy", On #activate (gtkMain ?self) ]
+  void $ #run app Nothing
