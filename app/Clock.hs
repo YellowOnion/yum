@@ -37,7 +37,7 @@ instance Yummy Clock where
           when b $ delay1 >> putMVar var () >> go
     _ <- forkIO go
 
-    label <- new Gtk.Label [ #widthRequest := 128, #label := "0" ]
+    label <- new Gtk.Label [ #halign := Gtk.AlignEnd ]
 
     return $ Clock label var
 
@@ -45,4 +45,4 @@ instance Yummy Clock where
     () <- takeMVar var
     time <- Time.getCurrentTime
     let time_s = sformat (FTime.hms) time
-    set lbl [#label := time_s ]
+    set lbl [#label := time_s, #widthChars := fromIntegral $ T.length time_s ]

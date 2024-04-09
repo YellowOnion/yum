@@ -59,12 +59,14 @@ common libs
                     , haskell-gi-base
                     , gi-gdk == 4.0.*
                     , gi-gtk == 4.0.*
+                    , gi-gio
                     , gi-gtk4-layer-shell
                     , gi-glib
                     , aeson
                     , pipes
                     , formatting
                     , time
+                    , monad-loops
 
 
 executable yum

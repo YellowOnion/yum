@@ -51,7 +51,7 @@
           packages = p: [ self.packages.${system}.default ];
           buildInputs = builtins.attrValues {
             inherit (pkgs) cabal-install cabal2nix;
-            inherit (haskellPkgs) ghc haskell-language-server hlint;
+            inherit (haskellPkgs) ghc haskell-language-server lambdabot hlint;
           };
         };});
 
