@@ -13,10 +13,11 @@ import Control.Concurrent.MVar  ( MVar, newMVar, takeMVar, isEmptyMVar, putMVar)
 
 import Data.GI.Base
 import GI.Gtk             qualified as Gtk
+import GI.GLib            qualified as GLib
 
 import Formatting
 import Formatting.Time  qualified as FTime
-import Data.Time  qualified as Time
+import Data.Time        qualified as Time
 
 import Yummy
 
@@ -37,12 +38,15 @@ instance Yummy Clock where
           when b $ delay1 >> putMVar var () >> go
     _ <- forkIO go
 
-    label <- new Gtk.Label [ #widthRequest := 128, #label := "0" ]
+    label <- new Gtk.Label [ #halign := Gtk.AlignEnd ]
 
     return $ Clock label var
 
   updateView (Clock lbl var) = do
     () <- takeMVar var
-    time <- Time.getCurrentTime
-    let time_s = sformat (FTime.hms) time
-    set lbl [#label := time_s ]
+    _ <- GLib.idleAdd  GLib.PRIORITY_DEFAULT_IDLE $ do
+      time <- Time.getCurrentTime
+      let time_s = sformat (FTime.hms) time
+      set lbl [#label := time_s, #widthChars := fromIntegral $ T.length time_s ]
+      return False
+    return ()

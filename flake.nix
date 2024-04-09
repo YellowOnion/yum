@@ -2,7 +2,7 @@
   description = "yum";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/46e634be05ce9dc6d4db8e664515ba10b78151ae";
     typed-systems = {
       url = "github:YellowOnion/nix-typed-systems";
       flake = false;
@@ -31,7 +31,7 @@
               pkgs.haskell.lib.compose.overrideCabal
                 { __onlyPropagateKnownPkgConfigModules = true; }
                 (super.callCabal2nix "gi-gtk4-layer-shell" "${self}/gi-gtk4-layer-shell" {
-                  gi-gtk = super.gi-gtk_4_0_8;
+                  gi-gtk = super.gi-gtk_4;
             });
           };};
         }) systems;
@@ -51,7 +51,7 @@
           packages = p: [ self.packages.${system}.default ];
           buildInputs = builtins.attrValues {
             inherit (pkgs) cabal-install cabal2nix;
-            inherit (haskellPkgs) ghc haskell-language-server hlint;
+            inherit (haskellPkgs) ghc haskell-language-server lambdabot hlint;
           };
         };});
 

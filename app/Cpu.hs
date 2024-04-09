@@ -6,6 +6,7 @@
 module Cpu where
 
 import Data.Text qualified as T
+
 import Text.Read (readMaybe)
 
 import System.IO
@@ -16,6 +17,7 @@ import Control.Concurrent.MVar  ( MVar, newMVar, takeMVar, isEmptyMVar, putMVar)
 
 import Data.GI.Base
 import GI.Gtk             qualified as Gtk
+import GI.GLib            qualified as GLib
 
 import Formatting
 
@@ -67,7 +69,7 @@ instance Yummy Cpu where
 
   init :: MVar () -> IO Cpu
   init mvar = do
-    bar <- new Gtk.Label [ #widthRequest := 128 ]
+    bar <- new Gtk.Label [ #label := "0 %" ]
     cpu <- readCpu
     var <- newMVar cpu
     let
@@ -83,4 +85,5 @@ instance Yummy Cpu where
 
   updateView (Cpu bar var) = do
     cpus <- takeMVar var
-    set bar [ #label := sformat (fixed 1 % " %") $ (*100) . percentCpu $ maximum cpus ]
+    _ <- GLib.idleAdd GLib.PRIORITY_DEFAULT_IDLE $ set bar [ #label := sformat (rfixed 7 ' ' $ fixed 1 % " %") $ (*100) . percentCpu $ maximum cpus ] >> return False
+    return ()
