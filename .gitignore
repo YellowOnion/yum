@@ -27,3 +27,6 @@ cabal.project.local~
 .HTF/
 
 result
+
+.envrc
+.direnv/
